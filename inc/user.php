@@ -161,4 +161,27 @@ class User extends DB_Config
             return false;
         }
     }
+
+    /*
+      menghapus data dari dalam database / delete
+      @parameter table ~> nama tabel dalam database
+      @parameter condition ~> aturan permintaan data untuk menghapus
+    */
+
+    public function delete($table, $condition) {
+        $whereSql = '';
+        if(!empty($condition) && is_array($condition)) {
+            $whereSql .= ' WHERE ';
+            $i = 0;
+            foreach($condition as $key => $value) {
+                $pre = ($i > 0) ? ' AND ' : '';
+                $whereSql .= $pre . $key . " = '" . $value . "'";
+                $i++;
+            }
+        }
+        // perintah query untuk menghapus data
+        $query = "DELETE FROM " . $table . $whereSql;
+        $delete = $this->db->query($query);
+        return $delete ? true : false;
+    }
 }
